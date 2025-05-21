@@ -76,4 +76,31 @@ A Flask-based web application designed to provide users with preliminary insight
 *   Retraining script: `retrain_minimal_pcos_model.py`.
 
 ## File Structure Overview
+pcod-tracker/
+├── instance/ # (gitignored) Local SQLite DB, etc.
+├── project/ # Main Flask app package
+│ ├── init.py
+│ ├── auth.py
+│ ├── main.py
+│ ├── models.py
+│ ├── pcos_app_files/ # Trained ML model & columns
+│ ├── static/
+│ └── templates/
+├── venv/ # (gitignored) Virtual environment
+├── .gitignore
+├── requirements.txt
+├── run.py
+├── retrain_minimal_pcos_model.py
+├── PCOS_infertility.csv # Example data
+├── pcod_symptoms.xlsx # Example data
+└── README.md # This file
 
+text
+
+## Deployment
+
+Intended for deployment on platforms like Vercel, requiring a production database (e.g., PostgreSQL) and environment variable configuration. A `vercel.json` file would be needed.
+
+## License
+
+This project is currently unlicensed.
