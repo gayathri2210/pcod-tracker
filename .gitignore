@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+project/__pycache__/ # Explicitly for __pycache__ inside the project subfolder
+
+# Virtual environment (assuming you have one, e.g., named 'venv')
+venv/
+env/
+.venv/
+ENV/
+
+# Instance folder (for local SQLite database, if you create one)
+instance/ 
+app_simple.db # Or app.db, whatever you name your local dev database
+
+# VS Code specific
+.vscode/
+
+# Secrets or environment variable files
+.env
+*.env
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Log files
+*.log
+logs/
+
+# Compressed files if they are just archives of data already present
+# archive.zip # Add this if you don't want to commit archive.zip
+
+# Large data files if not essential for the app to run or if too big for GitHub
+# You might want to commit your .csv and .xlsx files if the model needs them at runtime
+# OR if they are used by your retraining script which IS part of the repo.
+# If they are just raw data you processed once and won't use directly in the deployed app,
+# then consider ignoring them. For now, let's assume you want to commit them.
+# FedCycleData071012 (2).csv
+# pcod_symptoms.xlsx
+# PCOS_data_without_infertility.xlsx
+# PCOS_infertility.csv
+
+# Other Python scripts that are not part of the core Flask app or retraining,
+# if they are just for exploration or old versions (bias.py, gui.py, gui2.py, kmeans.py)
+# bias.py
+# gui.py
+# gui2.py
+# kmeans.py 
+# Consider if these are truly part of the project you want to share/deploy.
+# If they are just scratch files, add them to .gitignore.
+# If they are important utility scripts, keep them.

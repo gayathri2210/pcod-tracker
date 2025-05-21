@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body_class %}auth-page{% endblock %}  <!-- Fills body_class block -->
+
+{% block container_class %}auth-container{% endblock %} <!-- Fills container_class block with 'auth-container' -->
+
+{% block content %}
+    <header class="header">
+        <h1>Login</h1>
+    </header>
+    <form method="POST" action="{{ url_for('auth.login') }}" novalidate>
+        {{ form.hidden_tag() }} <!-- CSRF token -->
+        <div class="form-group">
+            {{ form.email_or_username.label(class="form-label") }}
+            {{ form.email_or_username(class="form-control", placeholder="Enter your email or username") }}
+            {% if form.email_or_username.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.email_or_username.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control", placeholder="Enter your password") }}
+            {% if form.password.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.password.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group form-check" style="display:flex; align-items:center; margin-bottom: 15px;">
+            {{ form.remember(class="form-check-input", style="margin-right: 5px; transform: scale(1.2);") }}
+            {{ form.remember.label(class="form-check-label") }}
+        </div>
+        <div class="form-actions">
+            {{ form.submit(class="submit-button") }}
+        </div>
+    </form>
+    <div class="auth-links">
+        <p>Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign Up</a></p>
+        <p><a href="{{ url_for('main.index') }}">Back to Symptom Checker</a></p>
+    </div>
+{% endblock %}

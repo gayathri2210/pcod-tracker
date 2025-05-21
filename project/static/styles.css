@@ -1,0 +1,448 @@
+/* project/static/style.css */
+
+:root {
+    /* Your Chosen Palette from Color Hunt */
+    --palette-deep-purple: #7F55B1;
+    --palette-medium-lavender: #9B7EBD;
+    --palette-soft-pink: #F49BAB;
+    --palette-blush-pink: #FFE1E0;
+
+    /* Unified Thematic Roles */
+    --primary-color: var(--palette-deep-purple);
+    --secondary-color: var(--palette-medium-lavender);
+    --accent-color: var(--palette-soft-pink);
+    --bg-color: var(--palette-blush-pink);
+    
+    --text-color: #2c3e50; 
+    --light-text-color: #5a6a7a; 
+    --form-bg-color: #ffffff;
+    --input-bg-color: #ffffff;
+    --input-border-color: #d1d5db;
+    --input-focus-border-color: var(--primary-color);
+    --input-focus-shadow-color: color-mix(in srgb, var(--primary-color) 20%, transparent);
+
+    /* Functional Colors for Alerts & Predictions */
+    --success-bg: #e0f2fe; 
+    --success-text: #0c4a6e; 
+    --success-border: #7dd3fc;
+    --success-icon: "✓";
+
+    --warning-bg: #fef9c3; 
+    --warning-text: #713f12;
+    --warning-border: #fde047;
+    --warning-icon: "⚠️";
+
+    --error-bg: #ffe4e6; 
+    --error-text: #b91c1c; 
+    --error-border: var(--palette-soft-pink);
+    --error-icon: "!";
+
+    --info-bg: var(--success-bg); /* Using success styling for general info */
+    --info-text: var(--success-text);
+    --info-border: var(--success-border);
+    --info-icon: "ℹ️";
+
+    --prediction-likely-bg: var(--error-bg); 
+    --prediction-likely-text: var(--error-text);
+    --prediction-likely-border: var(--error-border);
+    --prediction-likely-icon: "⚠️"; 
+
+    --prediction-unlikely-bg: var(--success-bg); 
+    --prediction-unlikely-text: var(--success-text);
+    --prediction-unlikely-border: var(--success-border);
+    --prediction-unlikely-icon: "✅"; 
+    
+    --font-family: 'Poppins', sans-serif;
+    --border-radius: 10px;
+    --box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+}
+
+/* --- Base & General --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.7;
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Ensure footer is at bottom */
+    justify-content: flex-start; /* Align content to top */
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 20px auto 0 auto; /* Margin top for nav, auto for sides, 0 for bottom initially */
+    flex-grow: 1; /* Allow main content to grow and push footer down */
+    padding-bottom: 20px; /* Space before footer */
+}
+
+.auth-container {
+    max-width: 420px;
+    background-color: var(--form-bg-color);
+    padding: 35px 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin: 60px auto 20px auto; /* More top margin for auth pages */
+}
+
+/* --- Headers --- */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 10px 0; 
+}
+.header h1 {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2.2em;
+    margin-bottom: 8px;
+}
+.header p {
+    color: var(--light-text-color);
+    font-size: 1.1em;
+}
+.auth-container .header h1 {
+    font-size: 2em;
+}
+
+/* --- Form Styling --- */
+.form-container {
+    background-color: var(--form-bg-color);
+    padding: 30px 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+.form-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed var(--secondary-color);
+}
+.form-section:last-of-type { border-bottom: none; margin-bottom: 20px; }
+.form-section h2 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label, .form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--light-text-color);
+    font-size: 0.95em;
+}
+.form-group input[type="number"],
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group select,
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    font-family: var(--font-family);
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-control:focus {
+    outline: none;
+    border-color: var(--input-focus-border-color);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow-color);
+}
+.form-control.is-invalid { border-color: var(--error-border); }
+.invalid-feedback { color: var(--error-text); font-size: 0.85em; margin-top: 4px; }
+
+/* Symptom Checker Specifics */
+.symptom-instruction { font-size: 0.95em; color: var(--light-text-color); margin-bottom: 15px; }
+.symptoms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+.symptom-item {
+    display: flex;
+    align-items: center;
+    background-color: color-mix(in srgb, var(--bg-color) 70%, white);
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--input-border-color);
+    transition: background-color 0.3s ease;
+}
+.symptom-item:hover { background-color: color-mix(in srgb, var(--bg-color) 50%, white); }
+.symptom-item input[type="checkbox"] { margin-right: 12px; transform: scale(1.2); accent-color: var(--primary-color); cursor: pointer; }
+.symptom-item label { font-size: 0.95em; color: var(--text-color); cursor: pointer; flex-grow: 1; }
+
+/* Buttons */
+.form-actions { text-align: center; margin-top: 25px; }
+.submit-button {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%); 
+    color: white;
+    padding: 14px 25px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    font-family: var(--font-family);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: auto;
+}
+.auth-container .submit-button { width: 100%; }
+.submit-button:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+.submit-button:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* --- Result Area & Prediction Text --- */
+.result-area {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: var(--form-bg-color);
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--box-shadow);
+}
+.result-area h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.6em;
+}
+.prediction-display {
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+    border: 1px solid transparent;
+    text-align: left; /* Align text left within display box */
+}
+.prediction-display.positive { /* For "Likely PCOS" */
+    background-color: var(--prediction-likely-bg);
+    border-color: var(--prediction-likely-border);
+}
+.prediction-display.negative { /* For "Unlikely PCOS" */
+    background-color: var(--prediction-unlikely-bg);
+    border-color: var(--prediction-unlikely-border);
+}
+.prediction-text {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    /* justify-content: center; Remove if text is left-aligned */
+}
+.prediction-text::before {
+    content: var(--prediction-icon, "");
+    font-size: 1.5em;
+    margin-right: 10px;
+    line-height: 1; /* Ensure icon aligns well */
+}
+.prediction-display.positive .prediction-text {
+    color: var(--prediction-likely-text);
+    --prediction-icon: var(--prediction-likely-icon);
+}
+.prediction-display.negative .prediction-text {
+    color: var(--prediction-unlikely-text);
+    --prediction-icon: var(--prediction-unlikely-icon);
+}
+.confidence-text {
+    font-size: 1.1em;
+    color: var(--light-text-color);
+    margin-bottom: 15px;
+    font-weight: 500;
+    /* text-align: center; Remove if overall text is left-aligned */
+}
+.explanatory-text {
+    font-size: 1em;
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.explanatory-text ul { list-style-position: inside; padding-left: 0; margin-top: 10px; }
+.explanatory-text li { margin-bottom: 8px; }
+.disclaimer-note { font-size: 0.85em; color: #777; margin-top: 20px; line-height: 1.5; text-align: center; }
+.disclaimer-note strong { font-weight: 600; }
+
+/* Auth Links (Login/Signup pages) */
+.auth-links { text-align: center; margin-top: 25px; font-size: 0.9em; }
+.auth-links p { margin-bottom: 8px; color: var(--light-text-color); }
+.auth-links a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+.auth-links a:hover { text-decoration: underline; color: var(--secondary-color); }
+
+/* Nav Links (in base.html) */
+.auth-nav { position: absolute; top: 20px; right: 20px; font-size: 0.9em; z-index: 1000; }
+.auth-nav span { margin-right: 10px; color: var(--primary-color); font-weight: 600; }
+.auth-nav a, .auth-nav button {
+    margin-left: 15px; color: var(--primary-color); text-decoration: none;
+    font-weight: 600; background: none; border: none; cursor: pointer;
+    font-family: var(--font-family); font-size: 1em;
+}
+.auth-nav a:hover, .auth-nav button:hover { text-decoration: underline; color: var(--secondary-color); }
+
+/* --- Flashed Messages --- */
+.flashes { width: 100%; max-width: 660px; /* Match form container width */ margin: 0 auto 20px auto; padding: 0; }
+.flashes .alert {
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+    text-align: left;
+    font-weight: 500;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.flashes .alert::before { font-size: 1.3em; margin-right: 12px; font-weight: normal; }
+.flashes .alert-success { color: var(--success-text); background-color: var(--success-bg); border-color: var(--success-border); }
+.flashes .alert-success::before { content: var(--success-icon); }
+.flashes .alert-danger { color: var(--error-text); background-color: var(--error-bg); border-color: var(--error-border); }
+.flashes .alert-danger::before { content: var(--error-icon); font-weight: bold; }
+.flashes .alert-warning { color: var(--warning-text); background-color: var(--warning-bg); border-color: var(--warning-border); }
+.flashes .alert-warning::before { content: var(--warning-icon); }
+.flashes .alert-info { color: var(--info-text); background-color: var(--info-bg); border-color: var(--info-border); }
+.flashes .alert-info::before { content: var(--info-icon); }
+
+/* Footer */
+.footer {
+    text-align: center;
+    width: 100%; /* Ensure footer takes full width */
+    margin-top: auto; /* Pushes footer to bottom if content is short */
+    padding: 20px 0;
+    border-top: 1px solid var(--input-border-color);
+    font-size: 0.9em;
+    color: var(--light-text-color);
+    background-color: var(--form-bg-color); /* Optional: give footer a light bg */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body { align-items: center; } /* Re-center for mobile consistency if nav is static */
+    .main-container, .auth-container {
+        margin-top: 70px; /* More space if nav is static */
+        margin-bottom: 20px;
+        padding-left: 15px; padding-right: 15px;
+    }
+    .header h1 { font-size: 1.8em; } .header p { font-size: 1em; }
+    .auth-container .header h1 { font-size: 1.7em; }
+    .form-grid, .symptoms-grid { grid-template-columns: 1fr; }
+    .auth-nav {
+        position: static; text-align: center; padding: 10px 0;
+        margin-bottom: 10px; width: 100%;
+        background-color: rgba(255,255,255,0.9); /* Light bg for nav on mobile */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .auth-nav span, .auth-nav a, .auth-nav button { display: inline-block; margin: 5px 10px; }
+    .flashes { max-width: 90%; }
+}
+/* === Profile Page Specific Styles === */
+
+/* Optional: If you used {% block container_class %}profile-page-container{% endblock %} in profile.html */
+/* .profile-page-container { */
+    /* Styles for the overall page container if needed */
+/* } */
+
+.profile-box { /* This class is applied to the .form-container div in profile.html */
+    max-width: 600px; /* Profile box can be a bit wider than auth forms */
+    margin: 20px auto; /* Center it */
+    padding: 30px 35px; /* Adjust padding */
+}
+
+.profile-box .header h1 {
+    color: var(--primary-color); /* Use your theme's primary color */
+}
+
+.profile-info-section {
+    margin-bottom: 25px;
+}
+
+.profile-info-item {
+    display: flex;
+    justify-content: space-between; /* Pushes label and value apart */
+    align-items: center;
+    padding: 14px 5px; /* Increased padding for better spacing */
+    border-bottom: 1px solid #f0f0f0; /* Lighter border between items */
+    font-size: 1.05em;
+}
+
+.profile-info-item:last-child {
+    border-bottom: none; /* No border for the last item */
+}
+
+.profile-info-item .info-label {
+    font-weight: 600;
+    color: var(--primary-color); /* Use palette color for labels */
+    margin-right: 20px;
+    flex-shrink: 0; /* Prevents the label from shrinking if the value is long */
+}
+
+.profile-info-item .info-value {
+    color: var(--text-color); /* Use your theme's text color */
+    text-align: right;
+    word-break: break-all; /* Helps if email or username is very long */
+}
+
+.profile-hr {
+    border: 0;
+    height: 1px;
+    background-color: var(--secondary-color); /* Use palette color */
+    opacity: 0.4; /* Make it a bit subtle */
+    margin: 25px 0;
+}
+
+.profile-actions {
+    margin-top: 20px; /* Space above action buttons */
+}
+
+.profile-actions .submit-button { /* Reusing .submit-button class for consistency */
+    display: block; /* Make buttons take full width */
+    width: 100%;
+    margin-bottom: 12px; /* Space between buttons */
+    text-align: center;
+    text-decoration: none; /* Important for <a> tags styled as buttons */
+    padding: 12px 20px; /* Adjust padding if needed */
+}
+
+.profile-actions .submit-button:last-child {
+    margin-bottom: 0;
+}
+
+/* Specific styling for different action buttons on profile page */
+.profile-actions .submit-button.primary {
+    /* Uses default .submit-button gradient (from previous styles) */
+}
+
+.profile-actions .submit-button.secondary {
+    background: var(--secondary-color); /* Example: Medium Lavender for secondary actions */
+    /* You might want to adjust text color if background is light */
+}
+.profile-actions .submit-button.secondary:hover {
+    background: var(--primary-color); /* Darker on hover */
+}
+
+.profile-actions .submit-button.danger {
+    background: var(--error-text); /* Using a color from your error variables for danger actions */
+    color: white; /* Ensure text is readable */
+}
+.profile-actions .submit-button.danger:hover {
+    background: color-mix(in srgb, var(--error-text) 80%, black); /* Darken on hover */
+}

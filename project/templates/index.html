@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}PCOS Symptom Insights - Advanced Model{% endblock %}
+
+{% block content %}
+    <header class="header text-center py-4">
+        <h1>PCOS Symptom Insights (Advanced Model)</h1>
+        {% if current_user.is_authenticated %}
+            <p id="greetingMessage" class="lead">
+                Hello, {{ current_user.username }}! Provide details below for an analysis.
+            </p>
+        {% endif %}
+        <!-- The generic "Hello! Please login or sign up..." is removed from the header for logged-out users -->
+    </header>
+
+    {% if current_user.is_authenticated %}
+        <!-- Authenticated User Content: PCOS Form and Results -->
+        <div class="form-container" id="pcosCheckerFormContainer">
+            
+            <form id="pcosForm" method="POST" action="{{ url_for('main.predict_pcos_via_form') }}">
+                
+                <!-- Basic & Physical Information -->
+                <div class="form-section card mb-4">
+                    <div class="card-header"><h2>Basic & Physical Information</h2></div>
+                    <div class="card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="age_from_form" class="form-label">Your Age (Years)</label>
+                                <input type="number" class="form-control" id="age_from_form" name="age_from_form" placeholder="e.g., 28" required min="12" max="70" value="{{ request.form.get('age_from_form', '') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="weight_from_form" class="form-label">Your Weight (Kg)</label>
+                                <input type="number" class="form-control" step="0.1" id="weight_from_form" name="weight_from_form" placeholder="e.g., 65.5" required min="30" max="250" value="{{ request.form.get('weight_from_form', '') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="bmi_from_form" class="form-label">Your BMI</label>
+                                <input type="number" class="form-control" step="0.01" id="bmi_from_form" name="bmi_from_form" placeholder="e.g., 24.13" required min="10" max="70" value="{{ request.form.get('bmi_from_form', '') }}">
+                                <small class="form-text text-muted">Body Mass Index. Calculate or estimate.</small>
+                            </div>
+                             <div class="form-group">
+                                <label for="waist_inch_from_form" class="form-label">Waist Circumference (inch)</label>
+                                <input type="number" class="form-control" step="0.1" id="waist_inch_from_form" name="waist_inch_from_form" placeholder="e.g., 32" min="20" max="70" value="{{ request.form.get('waist_inch_from_form', '') }}">
+                                 <small class="form-text text-muted">Measure around your natural waistline.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menstrual Cycle & Hormonal Indicators -->
+                <div class="form-section card mb-4">
+                    <div class="card-header"><h2>Menstrual Cycle & Hormonal Indicators</h2></div>
+                    <div class="card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="cycle_regularity_from_form" class="form-label">Menstrual Cycle Regularity</label>
+                                <select class="form-select" id="cycle_regularity_from_form" name="cycle_regularity_from_form" required>
+                                    <option value="" disabled {% if not request.form.get('cycle_regularity_from_form') %}selected{% endif %}>Select...</option>
+                                    <option value="Regular" {% if request.form.get('cycle_regularity_from_form') == 'Regular' %}selected{% endif %}>Regular</option>
+                                    <option value="Irregular" {% if request.form.get('cycle_regularity_from_form') == 'Irregular' %}selected{% endif %}>Irregular</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cycle_length_from_form" class="form-label">Avg. Cycle Length (Days)</label>
+                                <input type="number" class="form-control" id="cycle_length_from_form" name="cycle_length_from_form" placeholder="e.g., 35" min="15" max="90" value="{{ request.form.get('cycle_length_from_form', '') }}">
+                            </div>
+                             <div class="form-group">
+                                <label for="amh_ng_ml_from_form" class="form-label">AMH Level (ng/mL)</label>
+                                <input type="number" class="form-control" step="0.01" id="amh_ng_ml_from_form" name="amh_ng_ml_from_form" placeholder="e.g., 5.0" min="0" max="30" value="{{ request.form.get('amh_ng_ml_from_form', '') }}">
+                                 <small class="form-text text-muted">If known from blood tests.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Follicular Data (Ultrasound) -->
+                <div class="form-section card mb-4">
+                    <div class="card-header"><h2>Follicular Data (Ultrasound)</h2></div>
+                    <div class="card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="follicle_no_l_from_form" class="form-label">Follicle Count (Left Ovary)</label>
+                                <input type="number" class="form-control" id="follicle_no_l_from_form" name="follicle_no_l_from_form" placeholder="e.g., 12" min="0" max="50" value="{{ request.form.get('follicle_no_l_from_form', '') }}">
+                                 <small class="form-text text-muted">If known from ultrasound.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="follicle_no_r_from_form" class="form-label">Follicle Count (Right Ovary)</label>
+                                <input type="number" class="form-control" id="follicle_no_r_from_form" name="follicle_no_r_from_form" placeholder="e.g., 14" min="0" max="50" value="{{ request.form.get('follicle_no_r_from_form', '') }}">
+                                <small class="form-text text-muted">If known from ultrasound.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Common Symptoms & Lifestyle -->
+                <div class="form-section card mb-4">
+                    <div class="card-header"><h2>Common Symptoms & Lifestyle</h2></div>
+                    <div class="card-body">
+                        <p class="symptom-instruction">Check symptoms/factors regularly experienced:</p>
+                        <div class="symptoms-grid">
+                            <!-- These 'name' attributes MUST match the values in html_input_name_map in main.py -->
+                            <div class="form-check symptom-item">
+                                <input class="form-check-input" type="checkbox" id="weight_gain_y_n_from_form" name="weight_gain_y_n_from_form" value="Yes" {% if 'weight_gain_y_n_from_form' in request.form %}checked{% endif %}>
+                                <label class="form-check-label" for="weight_gain_y_n_from_form">Unexplained Weight Gain</label>
+                            </div>
+                            <div class="form-check symptom-item">
+                                <input class="form-check-input" type="checkbox" id="hair_growth_y_n_from_form" name="hair_growth_y_n_from_form" value="Yes" {% if 'hair_growth_y_n_from_form' in request.form %}checked{% endif %}>
+                                <label class="form-check-label" for="hair_growth_y_n_from_form">Excessive Hair Growth</label>
+                            </div>
+                            <div class="form-check symptom-item">
+                                <input class="form-check-input" type="checkbox" id="skin_darkening_y_n_from_form" name="skin_darkening_y_n_from_form" value="Yes" {% if 'skin_darkening_y_n_from_form' in request.form %}checked{% endif %}>
+                                <label class="form-check-label" for="skin_darkening_y_n_from_form">Skin Darkening</label>
+                            </div>
+                            <div class="form-check symptom-item">
+                                <input class="form-check-input" type="checkbox" id="hair_loss_y_n_from_form" name="hair_loss_y_n_from_form" value="Yes" {% if 'hair_loss_y_n_from_form' in request.form %}checked{% endif %}>
+                                <label class="form-check-label" for="hair_loss_y_n_from_form">Hair Loss (Scalp)</label>
+                            </div>
+                            <div class="form-check symptom-item">
+                                <input class="form-check-input" type="checkbox" id="pimples_y_n_from_form" name="pimples_y_n_from_form" value="Yes" {% if 'pimples_y_n_from_form' in request.form %}checked{% endif %}>
+                                <label class="form-check-label" for="pimples_y_n_from_form">Persistent Acne</label>
+                            </div>
+                            <div class="form-check symptom-item">
+                                <input class="form-check-input" type="checkbox" id="fast_food_y_n_from_form" name="fast_food_y_n_from_form" value="Yes" {% if 'fast_food_y_n_from_form' in request.form %}checked{% endif %}>
+                                <label class="form-check-label" for="fast_food_y_n_from_form">Regular Fast Food</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions mt-4">
+                    <button type="submit" id="submitBtnPCOS" class="btn btn-success btn-lg w-100">
+                        <i class="fas fa-search-plus me-2"></i> Analyze My Symptoms
+                    </button>
+                </div>
+            </form>
+
+            <!-- Result Area -->
+            <div id="resultArea" class="result-area mt-5" {% if prediction_result or (request.method == 'POST' and not prediction_result and not get_flashed_messages(category_filter=['danger'])) %}style="display:block;"{% else %}style="display:none;"{% endif %}>
+                <div class="card">
+                    <div class="card-header"><h2 id="resultHeader">Analysis Result:</h2></div>
+                    <div class="card-body">
+                        {% if prediction_result and prediction_result.pcos_status %}
+                            <div class="prediction-display {{ 'border-danger text-danger' if 'Likely' in prediction_result.pcos_status else 'border-success text-success' }}">
+                                <h3 id="predictionText" class="prediction-text">{{ prediction_result.pcos_status }}</h3>
+                                <p id="confidenceText" class="confidence-text">Model's P(PCOS): {{ (prediction_result.confidence * 100)|round(1) }}%</p>
+                                <div class="explanatory-text mt-2">
+                                    {% if 'Likely' in prediction_result.pcos_status %}
+                                        <p>This analysis suggests that your symptoms align with common patterns associated with PCOS, according to our predictive model and the defined threshold.</p>
+                                        <p><strong>Important Next Steps:</strong> Please consult with a healthcare professional (like a gynecologist or endocrinologist) for a definitive diagnosis. They can perform necessary tests and provide guidance.</p>
+                                    {% else %}
+                                        <p>This analysis suggests that your symptoms do not strongly align with common PCOS patterns, based on our predictive model and the defined threshold.</p>
+                                        <p><strong>Recommendations:</strong> Continue to monitor your symptoms. If you have ongoing concerns or if symptoms change or worsen, please consult with a healthcare professional.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% elif prediction_result and prediction_result.error %}
+                            <div class="alert alert-warning"><p id="predictionText">{{ prediction_result.error }}</p></div>
+                        {% elif request.method == 'POST' and not get_flashed_messages(category_filter=['danger']) %}
+                             <div class="alert alert-info"><p id="predictionText">Could not retrieve analysis. Please ensure all required fields are filled correctly.</p></div>
+                        {% endif %}
+                        <p class="disclaimer-note mt-3 text-muted"><small><strong>Disclaimer:</strong> This tool provides insights based on a predictive model and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</small></p>
+                    </div>
+                </div>
+            </div> <!-- End of resultArea -->
+
+        </div> <!-- End of form-container -->
+
+    {% else %}
+        <!-- Non-Authenticated User Content: Welcome and Login/Signup Buttons -->
+        <div class="text-center py-5">
+            <div class="welcome-message-box p-4 p-md-5 shadow-sm rounded bg-light" style="max-width: 600px; margin: auto;">
+                <i class="fas fa-heartbeat fa-3x text-primary mb-3"></i>
+                <h2 class="mb-3">Welcome to PCOS Insights!</h2>
+                <p class="lead mb-4">
+                    Get a preliminary analysis of your symptoms. Please log in or create an account to use the tool.
+                </p>
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-5 py-3">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
+                    </a>
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-success btn-lg px-5 py-3">
+                        <i class="fas fa-user-plus me-2"></i> Sign Up
+                    </a>
+                </div>
+                 <p class="mt-4 text-muted"><small>Your privacy is important to us. Data entered is used solely for the purpose of this analysis.</small></p>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts_extra %}
+    <script>
+        // Any page-specific JS for index.html can go here
+        console.log("[HTML] PCOS Insights page (index.html) loaded.");
+    </script>
+{% endblock %}
