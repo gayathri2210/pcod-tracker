@@ -1,4 +1,4 @@
-# PCOS Insights Platform (pcod-tracker)
+# PCOS Insights Platform 
 
 A Flask-based web application designed to provide users with preliminary insights into Polycystic Ovary Syndrome (PCOS) based on self-reported symptoms and data. The application utilizes a machine learning model (Logistic Regression) to predict the likelihood of PCOS.
 
